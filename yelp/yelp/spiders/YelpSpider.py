@@ -1,5 +1,6 @@
 
 import scrapy
+import configparser
 import unicodedata
 from scrapy.spiders.crawl import CrawlSpider
 from .. import session
@@ -14,6 +15,20 @@ TASK_TYPE_RESTAURANT = 2
 TASK_TYPE_REVIEW = 3
 
 
+def load_config():
+    config = configparser.ConfigParser()
+    config.read('/Users/bailynlove/Documents/1-Rroject/FakeReviews/YelpReviewAnalysis/yelp/config.ini')
+
+    cities = []
+    urls = []
+
+    for key in config['cities']:
+        cities.append(config.get('cities', key))
+    for key in config['urls']:
+        urls.append(config.get('urls', key))
+    return cities, urls
+
+
 class YelpSpider(CrawlSpider):
 
     name = 'yelp'
@@ -21,12 +36,13 @@ class YelpSpider(CrawlSpider):
     # task filter
     all_urls = set()
 
+    def __init__(self, *args, **kwargs):
+        super(YelpSpider, self).__init__(*args, **kwargs)
+        self.cities, self.urls = load_config()
+
     @property
     def get_start_tasks(self):
-        return [
-            # Here is the city which we gonna crawl
-            {'city': 'HongKong', 'url': 'https://www.yelp.com/search?cflt=restaurants&find_loc=Hong+Kong'},
-        ]
+        return [{'city': city, 'url': url} for city, url in dict(zip(self.cities, self.urls)).items()]
 
     # Everything starts from here
     def start_requests(self):

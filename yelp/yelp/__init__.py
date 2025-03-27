@@ -17,11 +17,12 @@ logger.addHandler(handler)
 
 DB_HOST = 'localhost'
 DB_USERNAME = 'root'
-DB_PASSWORD = 'root'
-DB_DBNAME = 'Food_Crawler'
+DB_PASSWORD = 'mysql123'
+DB_DBNAME = 'Yelp_Crawler'
 
 str_connect = 'mysql+mysqlconnector://%s:%s@%s:3306/%s?charset=utf8mb4' % (DB_USERNAME, DB_PASSWORD, DB_HOST, DB_DBNAME)
-engine = create_engine(str_connect, encoding="utf8")
+# engine = create_engine(str_connect, encoding="utf8")
+engine = create_engine(str_connect)
 
 base = declarative_base()
 
